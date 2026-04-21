@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foto Dipendenti</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
     --bg: #F5F2EE;
@@ -17,9 +18,7 @@
     --shadow: 0 2px 16px rgba(26,23,20,0.08);
     --radius: 12px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
@@ -30,212 +29,72 @@
     align-items: center;
     padding: 48px 24px;
   }
-
-  /* ── SETUP BANNER ── */
-  #setup-banner {
-    width: 100%;
-    max-width: 680px;
-    background: #FFF8F0;
-    border: 1.5px solid var(--accent);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    margin-bottom: 40px;
-    font-size: 13.5px;
-    line-height: 1.7;
-    color: #5A3010;
-    display: none; /* shown via JS when config is missing */
-  }
-  #setup-banner h3 { font-size: 15px; font-weight: 500; margin-bottom: 8px; color: var(--accent); }
-  #setup-banner code {
-    background: #F0E0D6;
-    border-radius: 4px;
-    padding: 1px 6px;
-    font-size: 12.5px;
-    font-family: 'Courier New', monospace;
-  }
-  #setup-banner ol { padding-left: 18px; }
-  #setup-banner li { margin-top: 4px; }
-  #setup-banner a { color: var(--accent); }
-
-  /* ── HEADER ── */
-  header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
+  header { text-align: center; margin-bottom: 40px; }
   header .eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 10px;
   }
   header h1 {
     font-family: 'DM Serif Display', serif;
     font-size: clamp(28px, 5vw, 42px);
-    font-weight: 400;
-    line-height: 1.15;
-    color: var(--ink);
+    font-weight: 400; line-height: 1.15; color: var(--ink);
   }
-  header p {
-    margin-top: 10px;
-    color: var(--ink-soft);
-    font-size: 15px;
-    font-weight: 300;
+  header p { margin-top: 10px; color: var(--ink-soft); font-size: 15px; font-weight: 300; }
+  #login-screen { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 20px; }
+  #login-screen p { color: var(--ink-soft); font-size: 15px; text-align: center; max-width: 340px; line-height: 1.6; }
+  #login-btn {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 28px; background: var(--surface);
+    border: 1.5px solid var(--border); border-radius: 999px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+    color: var(--ink); cursor: pointer; box-shadow: var(--shadow);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
   }
-
-  /* ── SEARCH BOX ── */
-  .search-wrap {
-    width: 100%;
-    max-width: 520px;
-    position: relative;
-    margin-bottom: 44px;
+  #login-btn:hover { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light), var(--shadow); transform: translateY(-2px); }
+  #login-btn svg { width: 20px; height: 20px; }
+  #app-screen { display: none; width: 100%; align-items: center; flex-direction: column; }
+  #logout-btn {
+    position: fixed; top: 16px; right: 20px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: var(--ink-soft); background: none;
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
   }
+  #logout-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .search-wrap { width: 100%; max-width: 520px; position: relative; margin-bottom: 44px; }
   .search-wrap svg.icon-search {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--ink-soft);
-    pointer-events: none;
-    width: 18px; height: 18px;
+    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+    color: var(--ink-soft); pointer-events: none; width: 18px; height: 18px;
   }
   #search {
-    width: 100%;
-    padding: 16px 18px 16px 48px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 999px;
-    outline: none;
-    color: var(--ink);
-    box-shadow: var(--shadow);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%; padding: 16px 18px 16px 48px;
+    font-family: 'DM Sans', sans-serif; font-size: 16px;
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 999px; outline: none; color: var(--ink);
+    box-shadow: var(--shadow); transition: border-color 0.2s, box-shadow 0.2s;
   }
-  #search:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-light), var(--shadow);
-  }
+  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light), var(--shadow); }
   #search::placeholder { color: #B0A89F; }
-
-  /* ── GRID ── */
-  #grid {
-    width: 100%;
-    max-width: 820px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 20px;
-  }
-
-  /* ── CARD ── */
+  #grid { width: 100%; max-width: 820px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
   .card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    transition: transform 0.18s, box-shadow 0.18s;
-    cursor: default;
-    animation: fadeUp 0.3s ease both;
+    background: var(--surface); border-radius: var(--radius);
+    overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border);
+    transition: transform 0.18s, box-shadow 0.18s; animation: fadeUp 0.3s ease both;
   }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 28px rgba(26,23,20,0.13);
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .card img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-    background: var(--accent-light);
-  }
-  .card-name {
-    padding: 10px 12px 12px;
-    font-size: 13.5px;
-    font-weight: 500;
-    color: var(--ink);
-    text-align: center;
-    line-height: 1.35;
-  }
-
-  /* ── STATES ── */
-  #status {
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 14px;
-    margin-top: 24px;
-    grid-column: 1 / -1;
-    min-height: 40px;
-  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(26,23,20,0.13); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; background: var(--accent-light); }
+  .card-name { padding: 10px 12px 12px; font-size: 13.5px; font-weight: 500; color: var(--ink); text-align: center; line-height: 1.35; }
+  #status { text-align: center; color: var(--ink-soft); font-size: 14px; margin-top: 24px; grid-column: 1/-1; min-height: 40px; }
   #status .big { font-size: 32px; display: block; margin-bottom: 8px; }
-
-  /* ── LOADING SPINNER ── */
-  .spinner {
-    width: 32px; height: 32px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto 12px;
-  }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── FOOTER ── */
-  footer {
-    margin-top: 60px;
-    font-size: 12px;
-    color: #BDB5AF;
-    text-align: center;
-  }
+  footer { margin-top: 60px; font-size: 12px; color: #BDB5AF; text-align: center; }
 </style>
 </head>
 <body>
-
-<!-- ══════════════════════════════════════════
-     ⚙️  CONFIGURAZIONE — modifica questi due valori
-     ══════════════════════════════════════════ -->
-<script>
-  // 1. Incolla qui la tua API Key di Google Cloud
-  const API_KEY = "AIzaSyB7xrsiGDUWcj3XkHGiZUOM6lPkSLrdU6c";
-
-  // 2. Incolla qui l'ID della cartella Google Drive con le foto
-  //    (è la parte dell'URL dopo /folders/  es: 1aBcDeFgHiJkLmNoPqRsTuVwXyZ)
-  const FOLDER_ID = "1euOZuc_lRRVPis-6f22dnVo5tdj-rQd6";
-</script>
-<!-- ══════════════════════════════════════════ -->
-
-
-<!-- Banner visibile solo se la configurazione non è completata -->
-<div id="setup-banner">
-  <h3>⚙️ Configurazione necessaria (una volta sola)</h3>
-  <p>Per far funzionare l'app, apri questo file HTML con un editor di testo (es. Blocco Note) e modifica le due righe nella sezione <code>CONFIGURAZIONE</code>:</p>
-  <ol>
-    <li><strong>API_KEY</strong> → la chiave che otterrai da Google Cloud Console (vedi guida sotto)</li>
-    <li><strong>FOLDER_ID</strong> → l'ID della cartella Drive con le foto (è nell'URL della cartella)</li>
-  </ol>
-  <p style="margin-top:12px"><strong>Come ottenere l'API Key in 5 minuti:</strong></p>
-  <ol>
-    <li>Vai su <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> con l'account Google aziendale</li>
-    <li>Crea un nuovo progetto (nome es: "Foto Dipendenti")</li>
-    <li>Menu laterale → <em>API e servizi</em> → <em>Libreria</em> → cerca <strong>Google Drive API</strong> → Attiva</li>
-    <li>Menu laterale → <em>Credenziali</em> → <em>Crea credenziali</em> → <strong>Chiave API</strong></li>
-    <li>Copia la chiave e incollala nel file al posto di <code>LA_TUA_API_KEY_QUI</code></li>
-    <li><em>(Facoltativo ma consigliato)</em> Clicca sulla chiave → Limitazioni applicazione → Siti web HTTP → aggiungi il dominio da cui la aprirete</li>
-  </ol>
-  <p style="margin-top:12px"><strong>Come trovare l'ID della cartella Drive:</strong></p>
-  <ol>
-    <li>Apri la cartella delle foto su Google Drive</li>
-    <li>Copia l'URL dalla barra del browser, es: <code>https://drive.google.com/drive/folders/<strong>1aBcDe...</strong></code></li>
-    <li>La parte dopo <code>/folders/</code> è l'ID → incollala al posto di <code>1euOZuc_lRRVPis-6f22dnVo5tdj-rQd6
-</code></li>
-  </ol>
-</div>
 
 <header>
   <div class="eyebrow">Risorse umane</div>
@@ -243,113 +102,129 @@
   <p>Cerca per nome o cognome</p>
 </header>
 
-<div class="search-wrap">
-  <svg class="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-  </svg>
-  <input type="search" id="search" placeholder="es. Mario Rossi…" autocomplete="off" spellcheck="false">
+<div id="login-screen">
+  <p>Accedi con il tuo account aziendale Google per visualizzare le foto dei dipendenti.</p>
+  <button id="login-btn" onclick="signIn()">
+    <svg viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+    Accedi con Google
+  </button>
 </div>
 
-<div id="grid">
-  <div id="status"><div class="spinner"></div>Caricamento foto…</div>
+<div id="app-screen">
+  <button id="logout-btn" onclick="signOut()">Esci</button>
+  <div class="search-wrap">
+    <svg class="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="search" id="search" placeholder="es. Mario Rossi..." autocomplete="off" spellcheck="false">
+  </div>
+  <div id="grid">
+    <div id="status"><div class="spinner"></div>Caricamento foto...</div>
+  </div>
 </div>
 
-<footer>Foto dipendenti · uso interno</footer>
+<footer>Foto dipendenti &middot; uso interno</footer>
 
 <script>
-// ── Costanti ──────────────────────────────────────────────────
-const DRIVE_API = "https://www.googleapis.com/drive/v3";
-const THUMB_SIZE = 400; // dimensione anteprima (px)
+var CLIENT_ID = "302721907131-ern7a1if1n4pjpjdo9k36k20nkk8jmm9.apps.googleusercontent.com";
+var FOLDER_ID = "1Wmu1mZFr97ufc_V1R94VGmxeEHMafTBO";
+var DRIVE_API = "https://www.googleapis.com/drive/v3";
+var SCOPE = "https://www.googleapis.com/auth/drive.readonly";
+var accessToken = null;
+var allFiles = [];
+var tokenClient = null;
 
-// ── Stato ─────────────────────────────────────────────────────
-let allFiles = []; // {id, name, displayName}
+window.onload = function() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPE,
+    callback: function(resp) {
+      if (resp.error) { alert("Errore di accesso: " + resp.error); return; }
+      accessToken = resp.access_token;
+      showApp();
+      loadFiles();
+    }
+  });
+};
 
-// ── Utility: nome file → nome leggibile ───────────────────────
+function signIn() {
+  tokenClient.requestAccessToken({ prompt: "consent" });
+}
+
+function signOut() {
+  google.accounts.oauth2.revoke(accessToken, function() {
+    accessToken = null;
+    allFiles = [];
+    document.getElementById("app-screen").style.display = "none";
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("search").value = "";
+  });
+}
+
+function showApp() {
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("app-screen").style.display = "flex";
+}
+
 function toDisplayName(filename) {
   return filename
-    .replace(/\.[^.]+$/, '')        // rimuove estensione
-    .replace(/[_\-]/g, ' ')         // _ e - → spazio
-    .split(' ')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join(' ');
+    .replace(/\.[^.]+$/, "")
+    .replace(/[_\-]/g, " ")
+    .split(" ")
+    .map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); })
+    .join(" ");
 }
 
-// ── Controlla configurazione ──────────────────────────────────
-function isConfigured() {
-  return API_KEY !== "LA_TUA_API_KEY_QUI" && FOLDER_ID !== "1euOZuc_lRRVPis-6f22dnVo5tdj-rQd6
-";
+function setStatus(html) {
+  document.getElementById("status").innerHTML = html;
 }
 
-// ── Carica lista file dal Drive ───────────────────────────────
-async function loadFiles() {
-  if (!isConfigured()) {
-    document.getElementById('setup-banner').style.display = 'block';
-    setStatus('<span class="big">⚙️</span>Leggi il banner in alto per configurare l\'app.');
-    return;
-  }
-
-  try {
-    let files = [];
-    let pageToken = null;
-
-    do {
-      const params = new URLSearchParams({
-        q: `'${FOLDER_ID}' in parents and mimeType contains 'image/' and trashed = false`,
-        fields: 'nextPageToken, files(id, name)',
-        pageSize: 200,
-        key: API_KEY,
-        ...(pageToken ? { pageToken } : {})
-      });
-
-      const res = await fetch(`${DRIVE_API}/files?${params}`);
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error?.message || res.statusText);
-      }
-      const data = await res.json();
-      files = files.concat(data.files || []);
-      pageToken = data.nextPageToken;
-    } while (pageToken);
-
-    allFiles = files.map(f => ({
-      id: f.id,
-      name: f.name,
-      displayName: toDisplayName(f.name)
-    }));
-
+function loadFiles() {
+  setStatus('<div class="spinner"></div>Caricamento foto...');
+  fetch(DRIVE_API + "/files?q=" + encodeURIComponent("'" + FOLDER_ID + "' in parents and mimeType contains 'image/' and trashed = false") + "&fields=files(id,name)&pageSize=200", {
+    headers: { Authorization: "Bearer " + accessToken }
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    if (data.error) { setStatus("<span class='big'>⚠️</span>Errore: " + data.error.message); return; }
+    allFiles = (data.files || []).map(function(f) {
+      return { id: f.id, name: f.name, displayName: toDisplayName(f.name) };
+    });
     renderCards(allFiles);
-  } catch (e) {
-    setStatus(`<span class="big">⚠️</span>Errore: ${e.message}<br><small>Controlla API Key, ID cartella e che la cartella sia condivisa pubblicamente.</small>`);
-  }
+  })
+  .catch(function(e) {
+    setStatus("<span class='big'>⚠️</span>Errore di rete: " + e.message);
+  });
 }
 
-// ── Render griglia ────────────────────────────────────────────
 function renderCards(files) {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-
+  var grid = document.getElementById("grid");
+  grid.innerHTML = "";
   if (files.length === 0) {
-    setStatus('<span class="big">🔍</span>Nessun dipendente trovato.');
+    setStatus("<span class='big'>🔍</span>Nessun dipendente trovato.");
     return;
   }
+  files.forEach(function(f, i) {
+    var card = document.createElement("div");
+    card.className = "card";
+    card.style.animationDelay = (Math.min(i * 30, 300)) + "ms";
 
-  files.forEach((f, i) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.animationDelay = `${Math.min(i * 30, 300)}ms`;
-
-    const img = document.createElement('img');
-    img.src = `${DRIVE_API}/files/${f.id}?alt=media&key=${API_KEY}`;
+    var img = document.createElement("img");
     img.alt = f.displayName;
-    img.loading = 'lazy';
-    img.onerror = () => {
-      // fallback: usa thumbnail pubblica di Drive
-      img.src = `https://drive.google.com/thumbnail?id=${f.id}&sz=w${THUMB_SIZE}`;
+    img.loading = "lazy";
+    img.src = DRIVE_API + "/files/" + f.id + "?alt=media&access_token=" + accessToken;
+    img.onerror = function() {
+      img.src = "https://drive.google.com/thumbnail?id=" + f.id + "&sz=w400";
       img.onerror = null;
     };
 
-    const label = document.createElement('div');
-    label.className = 'card-name';
+    var label = document.createElement("div");
+    label.className = "card-name";
     label.textContent = f.displayName;
 
     card.appendChild(img);
@@ -358,23 +233,13 @@ function renderCards(files) {
   });
 }
 
-function setStatus(html) {
-  document.getElementById('status').innerHTML = html;
-}
-
-// ── Ricerca in tempo reale ─────────────────────────────────────
-document.getElementById('search').addEventListener('input', e => {
-  const q = e.target.value.trim().toLowerCase();
+document.getElementById("search").addEventListener("input", function(e) {
+  var q = e.target.value.trim().toLowerCase();
   if (!q) { renderCards(allFiles); return; }
-
-  const filtered = allFiles.filter(f =>
-    f.displayName.toLowerCase().includes(q)
-  );
-  renderCards(filtered);
+  renderCards(allFiles.filter(function(f) {
+    return f.displayName.toLowerCase().indexOf(q) !== -1;
+  }));
 });
-
-// ── Avvio ─────────────────────────────────────────────────────
-loadFiles();
 </script>
 
 </body>
